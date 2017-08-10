@@ -21,26 +21,27 @@ resource "aws_db_subnet_group" "gitlab_db_sg" {
 }
 
 resource "aws_db_parameter_group" "pg_default" {
-    name = "gitlab-postgres-pg"
-    family = "postgres9.5"
+  name   = "gitlab-postgres-pg"
+  family = "postgres9.5"
 
-    parameter {
-      name = "client_encoding"
-      value = "utf8"
-    }
+  parameter {
+    name  = "client_encoding"
+    value = "utf8"
+  }
 }
 
 resource "aws_db_instance" "gitlab" {
-  allocated_storage         = 10
-  engine                    = "postgres"
-  engine_version            = "9.5.4"
-  license_model             = "postgresql-license"
-  instance_class            = "db.t2.micro"
-  name                      = "${var.gitlab_db_name}"
-  username                  = "${var.gitlab_db_username}"
-  password                  = "${var.gitlab_db_password}"
-  db_subnet_group_name      = "${aws_db_subnet_group.gitlab_db_sg.name}"
-  vpc_security_group_ids    = ["${aws_security_group.db_allow.id}"]
+  allocated_storage      = 10
+  engine                 = "postgres"
+  engine_version         = "9.5.4"
+  license_model          = "postgresql-license"
+  instance_class         = "${var.db_instance_type}"
+  name                   = "${var.gitlab_db_name}"
+  username               = "${var.gitlab_db_username}"
+  password               = "${var.gitlab_db_password}"
+  db_subnet_group_name   = "${aws_db_subnet_group.gitlab_db_sg.name}"
+  vpc_security_group_ids = ["${aws_security_group.db_allow.id}"]
+
   // parameter_group_name      = "default.postgres9.5"
   parameter_group_name      = "${aws_db_parameter_group.pg_default.name}"
   storage_type              = "gp2"

@@ -1,7 +1,6 @@
 ---
 locale_generate:
     - { lang: 'en_US', charset: 'UTF-8' }
-    - { lang: 'fr_FR', charset: 'UTF-8' }
 
 locale_timezone_continent: Etc
 locale_timezone_city: UTC
@@ -157,7 +156,7 @@ apt_extra_packages:
   - linux-generic
   - linux-headers-generic
   - "linux-headers-{{ ansible_kernel }}"
-  - "linux-image-extra-{{ ansible_kernel }}"
+#  - "linux-image-extra-{{ ansible_kernel }}"
   - dkms
   - openssh-blacklist
   - openssh-blacklist-extra

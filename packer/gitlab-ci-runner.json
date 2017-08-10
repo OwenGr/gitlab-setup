@@ -1,8 +1,6 @@
 {
   "variables": {
-    "aws_access_key": "",
-    "aws_secret_key": "",
-    "aws_region": "eu-west-1"
+    "aws_region": "us-west-2"
   },
   "builders": [
     {
@@ -10,14 +8,17 @@
       "access_key": "{{ user `aws_access_key` }}",
       "secret_key": "{{ user `aws_secret_key` }}",
       "region":     "{{ user `aws_region` }}",
-      "source_ami": "ami-971238f1",
-      "instance_type": "t2.micro",
+      "source_ami": "ami-6e1a0117",
+      "instance_type": "m4.large",
       "ssh_username": "ubuntu",
       "ami_name": "gitlab-ci-runner-{{isotime \"2006-01-02-15-04-05\"}}",
       "ami_description": "Gitlab CI runner",
+      "vpc_id": "vpc-5fe4b63b",
+      "subnet_id": "subnet-db019aad",
+      "associate_public_ip_address": true,
       "tags": {
         "application": "gitlab-ci-runner",
-        "version": "9.0.0",
+        "version": "9.4.3",
         "os": "ubuntu",
         "os_release": "16.04"
       }

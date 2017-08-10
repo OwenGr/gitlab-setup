@@ -1,9 +1,6 @@
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
-
 variable "aws_region" {
   description = "AWS EC2 Region for the VPC"
-  default     = "eu-west-1"
+  default     = "us-west-2"
 }
 
 variable "aws_dns_zone" {
@@ -30,30 +27,21 @@ variable "aws_az2" {
   default     = "eu-west-1b"
 }
 
-variable "vpc_cidr" {
-  description = "CIDR for the whole VPC"
-  default     = "10.0.0.0/16"
+variable "vpc_id" {
+  description = "The AWS VPC to deploy to"
 }
 
-variable "public1_subnet_cidr" {
-  description = "CIDR for the Public 1 Subnet"
-  default     = "10.0.0.0/24"
+variable "gateway_id" {
+  description = "The AWS Internet Gateway to use"
 }
 
-variable "public2_subnet_cidr" {
-  description = "CIDR for the Public 2 Subnet"
-  default     = "10.0.2.0/24"
-}
+variable "public1_subnet_id" {}
 
-variable "private1_subnet_cidr" {
-  description = "CIDR for the Private 1 Subnet"
-  default     = "10.0.1.0/24"
-}
+variable "public2_subnet_id" {}
 
-variable "private2_subnet_cidr" {
-  description = "CIDR for the Private 2 Subnet"
-  default     = "10.0.3.0/24"
-}
+variable "private1_subnet_id" {}
+
+variable "private2_subnet_id" {}
 
 variable "sg_ssh_cidr" {
   description = "CIDR allowed for SSH connection to public subnet"
@@ -104,4 +92,34 @@ variable "gitlab_root_password" {
 
 variable "gitlab_ci_registration_token" {
   description = "Gitlab initial CI registration token"
+}
+
+variable "ldap_host_name" {}
+variable "ldap_bind_dn" {}
+variable "ldap_password" {}
+variable "ldap_base" {}
+
+variable ci_instance_type {
+  description = "The AWS instance type to use for the GitLab CI Runners"
+  default     = "t2.micro"
+}
+
+variable gitlab_instance_type {
+  description = "The AWS instance type to use for the main GitLab servers"
+  default     = "t2.medium"
+}
+
+variable cache_instance_type {
+  description = "The AWS instance type to use for the Redis Cache (ElastiCache)"
+  default     = "cache.t2.small"
+}
+
+variable db_instance_type {
+  description = "The AWS instance type to use for the RDS database"
+  default     = "db.t2.micro"
+}
+
+variable bastion_instance_type {
+  description = "The AWS instance type to use for the bastion server"
+  default     = "t2.micro"
 }

@@ -35,8 +35,8 @@ ssh_host_keys:
 	fi;
 
 config: ssh_host_keys
-	cp -n -v packer/config.dist.json packer/config.json
-	cp -n -v terraform/terraform.dist.tfvars terraform/terraform.tfvars
+	# cp -n -v packer/config.dist.json packer/config.json
+	# cp -n -v terraform/terraform.dist.tfvars terraform/terraform.tfvars
 
 ami: ami-gitlab ami-runner
 

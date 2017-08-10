@@ -14,3 +14,7 @@ gitlab_cache_port: ${gitlab_cache_port}
 gitlab_proxy_subnets:
   - "${gitlab_proxy_subnet1}"
   - "${gitlab_proxy_subnet2}"
+ldap_host_name: "${ldap_host_name}"
+ldap_bind_dn: "${ldap_bind_dn}"
+ldap_password: "${ldap_password}"
+ldap_base: "${ldap_base}"

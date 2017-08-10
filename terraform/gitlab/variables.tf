@@ -1,6 +1,6 @@
 variable "aws_region" {
   description = "AWS EC2 Region for the VPC"
-  default     = "eu-west-1"
+  default     = "us-west-2"
 }
 
 variable "aws_dns_zone" {
@@ -10,16 +10,6 @@ variable "aws_dns_zone" {
 variable "gitlab_dns_subdomain" {
   description = "AWS Route53 zone"
   default     = "gitlab"
-}
-
-variable "public1_subnet_cidr" {
-  description = "CIDR for the Public 1 Subnet"
-  default     = "10.0.0.0/24"
-}
-
-variable "public2_subnet_cidr" {
-  description = "CIDR for the Public 2 Subnet"
-  default     = "10.0.2.0/24"
 }
 
 variable "gitlab_static_instances" {
@@ -39,7 +29,7 @@ variable "gitlab_min" {
 
 variable "gitlab_desired" {
   description = "Gitlab autoscale desired instance number"
-  default     = 2
+  default     = 1
 }
 
 variable "gitlab_data_mountpoint" {
@@ -77,13 +67,32 @@ variable "gitlab_secret_bucket" {
 variable "admin_ssh_key" {
   description = "AWS EC2 Admin ssh key pair name"
 }
+
 variable "vpc_id" {}
 variable "dns_zone_id" {}
 variable "dns_zone_name" {}
 variable "sg_bastions_id" {}
+
 variable "private_subnet_ids" {
   type = "map"
 }
+
 variable "public_subnet_ids" {
   type = "map"
 }
+
+variable "public1_subnet_id" {}
+
+variable "public2_subnet_id" {}
+
+variable "ldap_host_name" {}
+variable "ldap_bind_dn" {}
+variable "ldap_password" {}
+variable "ldap_base" {}
+variable "public1_subnet_cidr" {}
+variable "public2_subnet_cidr" {}
+
+variable "gitlab_instance_type" {}
+variable "ci_instance_type" {}
+variable "cache_instance_type" {}
+variable "db_instance_type" {}

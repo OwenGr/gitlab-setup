@@ -1,6 +1,7 @@
 data "aws_ami" "gitlab_runner" {
   owners      = ["self"]
   most_recent = true
+
   filter {
     name   = "tag:application"
     values = ["gitlab-ci-runner"]
@@ -8,8 +9,9 @@ data "aws_ami" "gitlab_runner" {
 }
 
 resource "aws_iam_role" "gitlab_ci_iam_role" {
-    name = "gitlab_ci_iam_role"
-    assume_role_policy = <<EOF
+  name = "gitlab_ci_iam_role"
+
+  assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -29,6 +31,7 @@ EOF
 resource "aws_iam_role_policy" "gitlab_ci_iam_role_policy" {
   name = "gitlab_ci_iam_role_policy"
   role = "${aws_iam_role.gitlab_ci_iam_role.id}"
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -51,7 +54,7 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "gitlab_ci_instance_profile" {
-  name = "gitlab_ci_instance_profile"
+  name  = "gitlab_ci_instance_profile"
   roles = ["${aws_iam_role.gitlab_ci_iam_role.name}"]
 }
 
@@ -61,9 +64,9 @@ resource "aws_security_group" "gitlab_ci" {
   vpc_id      = "${var.vpc_id}"
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "TCP"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "TCP"
     security_groups = ["${var.sg_bastions_id}", "${var.sg_gitlab_id}"]
   }
 
@@ -91,7 +94,7 @@ resource "aws_security_group" "gitlab_ci" {
 
 resource "aws_instance" "gitlab_ci" {
   ami                                  = "${data.aws_ami.gitlab_runner.id}"
-  instance_type                        = "t2.micro"
+  instance_type                        = "${var.ci_instance_type}"
   associate_public_ip_address          = false
   subnet_id                            = "${var.private_subnet_ids["private1"]}"
   vpc_security_group_ids               = ["${aws_security_group.gitlab_ci.id}"]
@@ -117,6 +120,6 @@ EOF
     "aws_s3_bucket_object.gitlab_ci_env_yml",
     "aws_s3_bucket_object.gitlab_ci_env_sh",
     "aws_s3_bucket_object.gitlab_ci_config",
-    "aws_s3_bucket_object.gitlab_ci_bootstrap"
+    "aws_s3_bucket_object.gitlab_ci_bootstrap",
   ]
 }

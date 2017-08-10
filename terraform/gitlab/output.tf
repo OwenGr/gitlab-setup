@@ -42,7 +42,6 @@ output "gitlab_db_endpoint" {
   value = "${aws_db_instance.gitlab.endpoint}"
 }
 
-
 output "gitlab_data_dns1" {
   value = "${aws_efs_mount_target.gitlab1.dns_name}"
 }
@@ -66,6 +65,7 @@ output "gitlab_cache_endpoint" {
 output "gitlab_cache_address" {
   value = "${aws_elasticache_cluster.gitlab_cache.cache_nodes.0.address}"
 }
+
 output "gitlab_cache_port" {
   value = "${aws_elasticache_cluster.gitlab_cache.cache_nodes.0.port}"
 }

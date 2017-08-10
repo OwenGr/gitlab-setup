@@ -22,7 +22,7 @@ data "aws_ami" "ubuntu_xenial" {
 resource "aws_security_group" "bastions" {
   name        = "bastions"
   description = "Allow SSH access to bastions"
-  vpc_id      = "${aws_vpc.gitlab.id}"
+  vpc_id      = "${data.aws_vpc.gitlab.id}"
 
   ingress {
     from_port   = 22
@@ -41,9 +41,9 @@ resource "aws_security_group" "bastions" {
 
 resource "aws_instance" "bastion1" {
   ami                                  = "${data.aws_ami.ubuntu_xenial.id}"
-  instance_type                        = "t2.micro"
+  instance_type                        = "${var.bastion_instance_type}"
   associate_public_ip_address          = true
-  subnet_id                            = "${aws_subnet.public1.id}"
+  subnet_id                            = "${data.aws_subnet.public1.id}"
   vpc_security_group_ids               = ["${aws_security_group.bastions.id}"]
   instance_initiated_shutdown_behavior = "terminate"
   key_name                             = "${aws_key_pair.admin.key_name}"

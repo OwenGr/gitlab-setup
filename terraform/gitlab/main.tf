@@ -1,6 +1,7 @@
 data "aws_ami" "gitlab" {
   owners      = ["self"]
   most_recent = true
+
   filter {
     name   = "tag:application"
     values = ["gitlab"]
@@ -8,8 +9,9 @@ data "aws_ami" "gitlab" {
 }
 
 resource "aws_iam_role" "gitlab_iam_role" {
-    name = "gitlab_iam_role"
-    assume_role_policy = <<EOF
+  name = "gitlab_iam_role"
+
+  assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -29,6 +31,7 @@ EOF
 resource "aws_iam_role_policy" "gitlab_iam_role_policy" {
   name = "gitlab_iam_role_policy"
   role = "${aws_iam_role.gitlab_iam_role.id}"
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -52,7 +55,7 @@ EOF
 
 resource "aws_iam_instance_profile" "gitlab_instance_profile" {
   name = "gitlab_instance_profile"
-  roles = ["${aws_iam_role.gitlab_iam_role.name}"]
+  role = "${aws_iam_role.gitlab_iam_role.name}"
 }
 
 resource "aws_security_group" "gitlab" {
@@ -61,9 +64,9 @@ resource "aws_security_group" "gitlab" {
   vpc_id      = "${var.vpc_id}"
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "TCP"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "TCP"
     security_groups = ["${var.sg_bastions_id}"]
   }
 
@@ -97,12 +100,12 @@ resource "aws_security_group" "gitlab" {
 }
 
 resource "aws_launch_configuration" "gitlab" {
-  name_prefix               = "gitlab-autoscale-"
-  image_id                  = "${data.aws_ami.gitlab.id}"
-  instance_type             = "t2.medium"
-  key_name                  = "${var.admin_ssh_key}"
-  security_groups           = ["${aws_security_group.gitlab.id}"]
-  iam_instance_profile      = "${aws_iam_instance_profile.gitlab_instance_profile.id}"
+  name_prefix          = "gitlab-autoscale-"
+  image_id             = "${data.aws_ami.gitlab.id}"
+  instance_type        = "${var.gitlab_instance_type}"
+  key_name             = "${var.admin_ssh_key}"
+  security_groups      = ["${aws_security_group.gitlab.id}"]
+  iam_instance_profile = "${aws_iam_instance_profile.gitlab_instance_profile.id}"
 
   user_data = <<EOF
 #cloud-config
@@ -128,10 +131,9 @@ EOF
     "aws_s3_bucket_object.gitlab_env_yml",
     "aws_s3_bucket_object.gitlab_env_sh",
     "aws_s3_bucket_object.gitlab_config",
-    "aws_s3_bucket_object.gitlab_bootstrap"
+    "aws_s3_bucket_object.gitlab_bootstrap",
   ]
 }
-
 
 resource "aws_autoscaling_group" "gitlab" {
   name                      = "gitlab"
@@ -173,7 +175,7 @@ resource "aws_autoscaling_group" "gitlab" {
     "aws_s3_bucket_object.gitlab_env_yml",
     "aws_s3_bucket_object.gitlab_env_sh",
     "aws_s3_bucket_object.gitlab_config",
-    "aws_s3_bucket_object.gitlab_bootstrap"
+    "aws_s3_bucket_object.gitlab_bootstrap",
   ]
 }
 
@@ -186,7 +188,7 @@ resource "aws_elb_attachment" "gitlab" {
 resource "aws_instance" "gitlab" {
   count                                = "${var.gitlab_static_instances}"
   ami                                  = "${data.aws_ami.gitlab.id}"
-  instance_type                        = "t2.medium"
+  instance_type                        = "${var.gitlab_instance_type}"
   associate_public_ip_address          = false
   subnet_id                            = "${var.private_subnet_ids["private1"]}"
   vpc_security_group_ids               = ["${aws_security_group.gitlab.id}"]
@@ -219,6 +221,6 @@ EOF
     "aws_s3_bucket_object.gitlab_env_yml",
     "aws_s3_bucket_object.gitlab_env_sh",
     "aws_s3_bucket_object.gitlab_config",
-    "aws_s3_bucket_object.gitlab_bootstrap"
+    "aws_s3_bucket_object.gitlab_bootstrap",
   ]
 }
